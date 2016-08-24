@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="users">
+<!-- main start-->
+
+<!-- views/users/show.ejs -->
+<div class="show">
+  <div class="buttons floats">
+    <a class="button" href="/">Home</a>
+    <a class="button float_right" href="/users/<%=user._id%>/edit">Edit</a>
+  </div>
+  <h3>User Info</h3>
+  <div class="inputs">
+    <div class="floats">
+      <label>Email</label>
+      <input disabled type="text" value="<%= user.email %>">
+    </div>
+    <div class="floats">
+      <label>Nickname</label>
+      <input disabled type="text" value="<%= user.nickname %>">
+    </div>
+  </div>
+</div>
+
+<!-- main end -->
+    </div><!--users end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>

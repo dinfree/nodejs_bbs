@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="login">
+<!-- main start-->
+
+<!-- views/login/login.ejs -->
+<div class="message"><%= loginMessage %></div>
+<div class="buttons">
+  <a href="/" class="button float_left">Home</a>
+  <a href="/users/new" class=" button float_right">Sign Up</a>
+</div>
+<h3>Login</h3>
+<form class="checkValidation" action="/login" method="post">
+  <div class="inputs">
+    <div class="floats">
+      <label>Email</label>
+      <input class="cvRequired" type="text" name="email" cvRqErrMsg="Please enter your login email." cvRqErrTo="#cvRqErrEmail" value="">
+      <div id="cvRqErrEmail" class="message"></div>
+    </div>
+    <div class="floats">
+      <label>Password</label>
+      <input class="cvRequired" type="password" name="password" cvRqErrMsg="Please enter your password." cvRqErrTo="#cvRqErrPassword" value="">
+      <div id="cvRqErrPassword" class="message"></div>
+    </div>
+    <% loginError.forEach(function(e){ %>
+        <div class="message"><%= e %><div>
+    <% }) %>
+  </div>
+  <div class="buttons">
+    <input class="button" type="submit" value="Submit">
+  </div>
+</form>
+
+<!-- main end -->
+    </div><!--login end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>

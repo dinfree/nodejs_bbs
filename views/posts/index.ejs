@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <header>
+      <% include ../partials/header %>
+    </header>
+    <div class="posts">
+    <% include partials/top %>
+<!-- main start-->
+
+<!-- views/posts/index.ejs -->
+<% query = urlQuery('?') %>
+<div class="index">
+<div class="message">
+  <%= postsMessage %>
+</div>
+  <div class="buttons">
+    <a class="button float_left" href="/posts/new<%= urlQuery('?') %>">New</a>
+    <% if(user) {%>
+      <a class="button float_right" href="/logout">Logout</a>
+      <a class="button float_right" href="/users/<%= user._id %>">My Profile (<%= user.nickname %>)</a>
+    <% } else { %>
+      <a class="button float_right" href="/login">Login</a>
+      <a class="button float_right" href="/users/new">Sign Up</a>
+    <% } %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="num">Num</th>
+        <th class="title">Title</th>
+        <th class="views">Views</th>
+        <th class="author">Author</th>
+        <th class="date">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(posts == null || posts.length == 0){ %>
+          <tr class="noData">
+            <td colspan="5">There is no data to show :(</td>
+          </tr>
+      <% } %>
+      <% posts.forEach(function(post){ %>
+        <tr>
+          <td class="num"><%= post.numId %></td>
+          <td class="title">
+            <a href="/posts/<%= post._id + query %>">
+              <span class="highlight" data-highlight="<%= search.highlight.title %>"><%= post.title %>
+              <span class="comments">(<%= post.comments.length %>)</span>
+            </a>
+          </td>
+          <td class="views"><%= post.views %></td>
+          <td class="author highlight" data-highlight="<%= search.highlight.author %>"><%= post.author.nickname %></td>
+          <td class="date"><%= post.getFormattedDate(post.createdAt) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <ul class="pagination">
+    <%
+      var offset = 3;
+      var partialQuery = urlQuery("&",["page"]);
+    %>
+    <% for(i=1;i<=maxPage;i++){ %>
+      <% if(i<=offset || i>maxPage-offset || (i>=page-(offset-1) && i<=page+(offset-1))){ %>
+        <% if(i != page){ %>
+          <li>[<a href="/posts?page=<%= i %><%= partialQuery %>"> <%= i %> </a>]</li>
+        <% } else { %>
+          <li>[ <b><%= i %></b> ]</li>
+        <% } %>
+      <% } else if(i == offset+1 || i == maxPage-offset){ %>
+          <li>...</li>
+      <% } %>
+    <%}%>
+  </ul>
+  <div class="floats">
+    <div class="counter float_left">
+      <% if(counter){ %>
+        Total <%= counter.totalCount %> visitors<br>
+        (today: <%= counter.todayCount %>)
+      <% } %>
+    </div>
+    <div class="search float_right">
+      <form class="checkValidation" action="/posts/" id="search">
+        <select name="searchType" <%= search.searchType=="author!"?"disabled":"" %>>
+          <% var select %>
+          <option value="title,body"
+            <%= search.searchType=="title,body"?select="selected":"" %>>Title+Body</option>
+          <option value="title"
+            <%= search.searchType=="title"?select="selected":"" %>>Title</option>
+          <option value="body"
+            <%= search.searchType=="body"?select="selected":"" %>>Body</option>
+          <%if(search.searchType=="author!"){%>
+            <option value="author!"
+              <%= search.searchType=="author!"?select="selected":"" %>>Author</option>
+          <%} else {%>
+            <option value="author"
+              <%= search.searchType=="author"?select="selected":"" %>>Author</option>
+          <%}%>
+        </select>
+        <input class="cvMinLength" cvMinLength="3"
+          cvMinLenErrTo="#searchError"
+          cvMinLenErrMsg="It should be at least 3 characters"
+          type="text" name="searchText" value="<%= select?search.searchText:"" %>"
+          <%= search.searchType=="author!"?"disabled":"" %>>
+        <input class="button" type="submit"  value="Search"<%= search.searchType=="author!"?"disabled":"" %>>
+        <%if(search.searchType){%>
+          <a class="button" href="/posts?page=1">cancel</a>
+        <%}%>
+        <div class="message" id="searchError"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- main end -->
+    </div><!--posts end -->
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+  </body>
+</html>
